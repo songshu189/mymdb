@@ -125,8 +125,7 @@ STATIC_URL = '/static/'
 PROJECT_APP_PATH = os.path.dirname(os.path.abspath(__file__))
 PROJECT_APP = os.path.basename(PROJECT_APP_PATH)
 f = os.path.join(PROJECT_APP_PATH, "local_settings.py")
-print(PROJECT_APP_PATH)
-print(f)
+
 if os.path.exists(f):
     import sys
     import imp
