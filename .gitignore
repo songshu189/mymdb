@@ -1,0 +1,7 @@
+*.pyc
+*.pyo
+*.db
+.DS_Store
+.coverage
+/django/config/local_settings.py
+/django/static
