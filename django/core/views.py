@@ -148,5 +148,13 @@ class MovieList(ListView):
     model = Movie
     paginate_by = 10
 
+
+class TopMovies(ListView):
+    template_name = 'core/top_movies_list.html'
+    queryset = Movie.objects.top_movies(
+            limit=10
+        )
+
+
 class PersonDetail(DetailView):
     queryset = Person.objects.all_with_prefetch_movies()
