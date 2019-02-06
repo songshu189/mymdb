@@ -3,5 +3,6 @@
 *.db
 .DS_Store
 .coverage
+/media_root
 /django/config/local_settings.py
 /django/static

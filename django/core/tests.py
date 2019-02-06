@@ -1,12 +1,14 @@
-from django.test import TestCase
+import tempfile
+from django.test import TestCase, override_settings
 from django.test.client import \
     RequestFactory
 from django.urls.base import reverse
 from django.contrib.auth import get_user_model
 
-from core.models import Movie, Vote
+from core.models import Movie, Vote, MovieImage
 from core.views import MovieList, CreateVote
 
+MEDIA_ROOT = tempfile.mkdtemp()
 
 class MovieListPaginationTestCase(
     TestCase):
@@ -60,6 +62,10 @@ class VoteTestCase(TestCase):
                 runtime=100,
             )
             self.objects.append(obj)
+
+    def tearDown(self):
+        Movie.objects.all().delete()
+        self.user.delete()
 
     def test_createvote_redirect(self):
         movie_id = self.objects[2].id
@@ -121,3 +127,60 @@ class VoteTestCase(TestCase):
         self.assertRedirects(response, movie_detail_url)
 
         response = self.client.get(movie_detail_url)
+
+class ImageUploadTestCase(TestCase):
+
+    def setUp(self):
+        self.user = get_user_model().objects.create(
+            username='user01',
+            email='user01@...',
+            password='top_secret'
+        )
+        self.movie = Movie.objects.create(
+                title='Title 123',
+                year=2018,
+                runtime=100,
+            )
+        self.image = self._create_image()
+
+    def _create_image(self):
+        from PIL import Image
+        with tempfile.NamedTemporaryFile(suffix='.png', delete=False) as f:
+            image = Image.new('RGB', (200, 200), 'white')
+            image.save(f, 'PNG')
+
+        return open(f.name, mode='rb')
+
+    def tearDown(self):
+        self.image.close()
+
+    @override_settings(MEDIA_ROOT=MEDIA_ROOT)
+    def test_upload_image(self):
+        movie_id = self.movie.id
+        image_upload_path = reverse(
+            'core:MovieImageUpload',
+            kwargs={'movie_id':movie_id}
+        )
+        self.client.force_login(self.user)
+        response = self.client.get(image_upload_path)
+
+        movie_detail_url = reverse(
+            'core:MovieDetail',
+            kwargs={'pk': movie_id}
+        )
+        self.assertRedirects(response, movie_detail_url)
+        response=self.client.get(movie_detail_url)
+
+        response = self.client.post(image_upload_path,
+            data={
+                'user': self.user.id,
+                'movie': movie_id,
+                'image': self.image,
+            })
+
+        mimg = MovieImage.objects.filter(
+            user__id=self.user.id,
+            movie__id=movie_id,
+        )
+
+        self.assertEqual(mimg.count(), 1)
