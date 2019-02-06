@@ -124,6 +124,7 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 LOGIN_REDIRECT_URL = 'core:MovieList'
+LOGIN_URL = 'user:login'
 
 PROJECT_APP_PATH = os.path.dirname(os.path.abspath(__file__))
 PROJECT_APP = os.path.basename(PROJECT_APP_PATH)

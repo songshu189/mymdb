@@ -22,3 +22,16 @@ alter role $dbuser set client_encoding to 'utf8';
 ALTER ROLE $dbuser SET default_transaction_isolation TO 'read committed';
 alter role $dbuser set timezone to 'UTC';
 grant all privileges on database $dbname to $dbuser;
+ALTER USER $dbuser CREATEDB;
+
+
+ERRORS:
+P72
+In render_to_response of CreateVote
+    movie_id = self.kwargs['movie_id']
+    # no context['object'] yet
+P74
+In render_to_response of UpdateVote
+    movie_id = context['object'].movie.id
+    # conext['object'] is a Vote object
+    # not a Movie object
