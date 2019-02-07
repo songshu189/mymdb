@@ -14,6 +14,7 @@ from core.models import (
 from core.forms import (
     VoteForm, MovieImageForm,
 )
+from core.mixins import CachePageVaryOnCookieMixin
 
 
 class MovieDetail(DetailView):
@@ -144,7 +145,7 @@ class UpdateVote(LoginRequiredMixin, UpdateView):
             to=movie_detail_url)
 
 
-class MovieList(ListView):
+class MovieList(CachePageVaryOnCookieMixin, ListView):
     model = Movie
     paginate_by = 10
 

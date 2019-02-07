@@ -6,3 +6,4 @@
 /media_root
 /django/config/local_settings.py
 /django/static
+/django/debug*

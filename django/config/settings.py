@@ -129,6 +129,15 @@ MEDIA_ROOT = os.path.join(BASE_DIR, '../media_root')
 LOGIN_REDIRECT_URL = 'core:MovieList'
 LOGIN_URL = 'user:login'
 
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+        'LOCATION': 'default-locmemcache',
+        'TIMEOUT': 60, # 60 seconds
+    }
+}
+CSRF_USE_SESSIONS = True
+
 PROJECT_APP_PATH = os.path.dirname(os.path.abspath(__file__))
 PROJECT_APP = os.path.basename(PROJECT_APP_PATH)
 f = os.path.join(PROJECT_APP_PATH, "local_settings.py")
