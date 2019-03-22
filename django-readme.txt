@@ -16,12 +16,12 @@ pip install --upgrade pip
 python3 -m pip install -r requirements.dev.txt
 
 sudo -u postgres psql
-create databse $dbname;
-create user $dbuser with password '$password'
-alter role $dbuser set client_encoding to 'utf8';
+CREATE DATABASE $dbname;
+CREATE USER $dbuser WITH PASSWORD '$password'
+ALTER ROLE $dbuser SET client_encoding TO 'utf8';
 ALTER ROLE $dbuser SET default_transaction_isolation TO 'read committed';
-alter role $dbuser set timezone to 'UTC';
-grant all privileges on database $dbname to $dbuser;
+ALTER ROLE $dbuser SET timezone TO 'UTC';
+GRANT ALL PRIVILEGES ON DATABASE $dbname TO $dbuser;
 ALTER USER $dbuser CREATEDB;
 
 
